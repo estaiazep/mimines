@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>MiMInes</title>
+    <link rel="stylesheet" href="../static/MiMInes/style.css">
+</head>
+<body class="inter">
+<div class="Back">
+
+</div>
+    <input type="hidden" id="language"  value="english"/>
+<a href="javascript:history.back()" class="BackArrow">
+    <svg id="backArrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="60" height="60">
+        <defs>
+            <linearGradient id="arrow-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#ffffff">
+                    <animate attributeName="stop-color" values="#ffffff;#FFA500;#ffffff" dur="3s" repeatCount="indefinite" />
+                </stop>
+                <stop offset="100%" stop-color="#FFA500">
+                    <animate attributeName="stop-color" values="#FFA500;#ffffff;#FFA500" dur="3s" repeatCount="indefinite" />
+                </stop>
+            </linearGradient>
+        </defs>
+        <path d="M 30 10 L 15 25 L 30 40" fill="none" stroke="url(#arrow-gradient)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+</a>
+
+<img class="star1" src="../static/MiMInes/resource/Star.svg">
+    <img class="star2" src="../static/MiMInes/resource/Star.svg">
+    <div class="headerMines">
+        <img src="../static/MiMInes/resource/MiMines.png">
+    </div>
+    <div class="selectorMines">
+        <div class="dropdownMines">
+            <div class="selector">
+                <a id="minesSelector"></a>
+            </div>
+            <div class="dropdown">
+                <button class="dropdown-button"></button>
+                <div class="dropdown-content">
+                    <a href="#">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <a href="#">6</a>
+                    <a href="#">7</a>
+                    <a href="#">8</a>
+                    <a href="#">9</a>
+                    <a href="#">10</a>
+                    <a href="#">11</a>
+                    <a href="#">12</a>
+                    <a href="#">13</a>
+                    <a href="#">14</a>
+                    <a href="#">15</a>
+                    <a href="#">16</a>
+                    <a href="#">17</a>
+                    <a href="#">18</a>
+                    <a href="#">19</a>
+                    <a href="#">20</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="main">
+        <canvas id="canvas">
+        </canvas>
+    </div>
+    <div class="mainPanel">
+        <div class="rowButton">
+            <div class="replayButton" onclick=" createGrid(); drawGrid()">
+                <img src="../static/MiMInes/resource/Replay.svg">
+            </div>
+            <div class="getSignal" onclick="handleScenario(selectIndex)">
+                <img src="../static/MiMInes/resource/Play.svg">
+                <a id="get-signal-text"></a>
+            </div>
+        </div>
+        <div class="rowButton">
+            <div class="gameHere">
+                <a href="https://1wzyuh.com/casino/play/spribe_mines" class="game-here" target="_blank" rel="noopener noreferrer" id="game-here-text"></a>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        Telegram.WebApp.expand(); // Открытие веб-приложения в полный экран
+        window.Telegram.WebApp.allow_vertical_swipe = false;
+        window.Telegram.WebApp.disableVerticalSwipes();
+
+        // Получаем язык из скрытого поля
+        var userLanguage = document.getElementById("language").value;
+
+        // Объект с текстами для каждого языка
+        const texts = {
+            english: {
+                getSignal: "GET SIGNAL",
+                gameHere: "GAME HERE",
+                minesSelector: "Mines:"
+            },
+            russian: {
+                getSignal: "ПОЛУЧИТЬ СИГНАЛ",
+                gameHere: "ИГРА ЗДЕСЬ",
+                minesSelector: "Мин:"
+            }
+        };
+
+        //Функция для установки языка
+        function setLanguage(userLanguage) {
+            const langTexts = userLanguage === 'russian' ? texts.russian : texts.english;
+            document.getElementById("get-signal-text").innerHTML = langTexts.getSignal;
+            document.getElementById("game-here-text").innerHTML = langTexts.gameHere;
+            document.getElementById("minesSelector").innerHTML = langTexts.minesSelector +"1";
+        }
+        // Вызываем функцию установки языка при загрузке страницы
+        setLanguage(userLanguage);
+
+        // Находим все ссылки в выпадающем списке
+        const dropdownItems = document.querySelectorAll('.dropdown-content a');
+
+        // Находим элемент с id="minesSelector"
+        const minesSelector = document.getElementById('minesSelector');
+
+        // Находим выпадающий список и кнопку
+        const dropdownContent = document.querySelector('.dropdown-content');
+        const dropdownButton = document.querySelector('.dropdown-button');
+
+        // Добавляем обработчик события для кнопки
+        dropdownButton.addEventListener('click', function() {
+            // Переключаем отображение выпадающего списка
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Добавляем обработчик события для каждой ссылки
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function(event) {
+                event.preventDefault(); // Отключаем переход по ссылке
+                selectIndex = Number(this.textContent);
+                const langTexts =
+                    userLanguage === 'russian' || userLanguage === 'uzbek' || userLanguage === 'azerbaijani'
+                        ? texts.russian
+                        : texts.english;
+                minesSelector.textContent = langTexts.minesSelector + `${this.textContent}`;
+
+
+                // Скрываем выпадающий список после выбора
+                dropdownContent.style.display = 'none';
+            });
+        });
+
+
+    </script>
+    <script src="../static/MiMInes/script.js"></script>
+    <script src="../static/MiMInes/CanvasMiMines.js"></script>
+</body>
+</html>
